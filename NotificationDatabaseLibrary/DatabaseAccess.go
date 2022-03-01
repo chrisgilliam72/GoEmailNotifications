@@ -1,4 +1,4 @@
-package DBAccess
+package NotificationDatabaseLibrary
 
 import (
 	"context"
@@ -29,26 +29,25 @@ func closeDBConnection(sqlDB *sql.DB) error {
 	return nil
 }
 
-
-func GetEmailAddress(applicantionRef string) (emailAddress string, error error) {
+func GetEmailAddress(applicantionRef string) (emailAddress string, emailName string, error error) {
 
 	sqlDB, err := openDBConnection()
 
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
 	defer closeDBConnection(sqlDB)
 
 	ctx := context.Background()
 
-	tsql := "select EmailAddress from EmailAdressess where ApplicationReference = @ApplicationReference"
+	tsql := "select EmailAddress,Name from EmailAdressess where ApplicationReference = @ApplicationReference"
 	rows, err := sqlDB.QueryContext(ctx, tsql, sql.Named("ApplicationReference", applicantionRef))
 	if err != nil {
-		return "", fmt.Errorf(" error queerying email address: %v", err)
+		return "", "", fmt.Errorf(" error queerying email address: %v", err)
 	}
 	rows.Next()
-	rows.Scan(&emailAddress)
-	return emailAddress, nil
+	rows.Scan(&emailAddress, &emailName)
+	return emailAddress, emailName, nil
 
 }
 

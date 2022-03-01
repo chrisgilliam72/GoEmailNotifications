@@ -24,6 +24,7 @@ type QueueNotificationMessage struct {
 	EventComment         string
 	RequestType          string
 	MessageStatus        string
+	Message              string
 	EventId              int
 }
 
@@ -153,6 +154,9 @@ func NotificationCount() (int, error) {
 		return -1, err
 	}
 
+	if peekResp == nil {
+		return 0, nil
+	}
 	return int(peekResp.NumMessages()), nil
 }
 
@@ -174,7 +178,7 @@ func GetNotifications() ([]QueueNotificationMessage, error) {
 		var queueNotificationMessage QueueNotificationMessage
 		msg := dequeueMessages.Message(i)
 		json.Unmarshal([]byte(msg.Text), &queueNotificationMessage)
-		notificationLst = append(notificationLst, queueNotificationMessage)
+		notificationLst[i] = queueNotificationMessage
 	}
 
 	return notificationLst, nil
