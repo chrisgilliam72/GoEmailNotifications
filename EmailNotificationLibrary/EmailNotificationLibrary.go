@@ -11,10 +11,6 @@ import (
 	"github.com/Azure/azure-storage-queue-go/azqueue"
 )
 
-const storageAccountName = "chrisglearningstore"
-const storageAccountKey = "JyHvy0AXXkr+KqUOfbceW+xuqiQBJYDhylJk+6JgpLJGqm4M/8yuCA6+cN+4jLnX/mdTIoXARrUuEwIuulzcuQ=="
-const storageQueueName = "goqueue"
-
 type QueueNotificationMessage struct {
 	NotificationType     int
 	ApplicationReference string
@@ -142,7 +138,7 @@ func dequeueMessages(storageAccountName, storageQueueName string, credential azq
 	return dequeueResp, nil
 }
 
-func NotificationCount() (int, error) {
+func NotificationCount(storageAccountName, storageAccountKey, storageQueueName string) (int, error) {
 
 	credential, err := getCredentials(storageAccountName, storageAccountKey, storageQueueName)
 	if err != nil {
@@ -160,7 +156,7 @@ func NotificationCount() (int, error) {
 	return int(peekResp.NumMessages()), nil
 }
 
-func GetNotifications() ([]QueueNotificationMessage, error) {
+func GetNotifications(storageAccountName, storageAccountKey, storageQueueName string) ([]QueueNotificationMessage, error) {
 
 	credential, err := getCredentials(storageAccountName, storageAccountKey, storageQueueName)
 	if err != nil {

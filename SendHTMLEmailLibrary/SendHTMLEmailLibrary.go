@@ -34,7 +34,7 @@ func SendEmailNotification(emailAddress, emailName, notificationType, applicanti
 
 	m := gomail.NewMessage()
 	m.SetHeader("From", "GoEmailNotificationsManager@comcorp.co.za")
-	m.SetHeader("To", "chris@comcorp.co.za", "chris@comcorp.co.za")
+	m.SetHeader("To", emailAddress, emailAddress)
 	// m.SetAddressHeader("Cc", "dan@example.com", "Dan")
 	m.SetHeader("Subject", "GO Email Notifications")
 	m.SetBody("text/html", emailHtmlTmplate)

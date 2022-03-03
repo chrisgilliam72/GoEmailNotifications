@@ -9,7 +9,7 @@ import (
 	_ "github.com/denisenkom/go-mssqldb"
 )
 
-const connectionString = "Server=localhost;user=COMCORPOFFICE\\Chris;password=June1972+;Database=EmailNotifications;Trusted_Connection=True;"
+const connectionString = "Server=localhost;user=golangsvc;password=Password01;Database=EmailNotifications;Trusted_Connection=True;"
 
 func openDBConnection() (*sql.DB, error) {
 	sqlDB, err := sql.Open("sqlserver", connectionString)

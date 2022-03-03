@@ -1,0 +1,9 @@
+{
+    "QueueSettings":
+    {
+        "StorageAccountName": "chrisglearningstore",
+        "StorageAccountKey": "JyHvy0AXXkr+KqUOfbceW+xuqiQBJYDhylJk+6JgpLJGqm4M/8yuCA6+cN+4jLnX/mdTIoXARrUuEwIuulzcuQ==",
+        "StorageQueueName": "goqueue"
+    }
+
+}

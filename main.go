@@ -4,8 +4,10 @@ import (
 	"EmailNotificationService/EmailNotificationLibrary"
 	"EmailNotificationService/NotificationDatabaseLibrary"
 	"EmailNotificationService/SendHTMLEmailLibrary"
+	"encoding/json"
 	"fmt"
 	"log"
+	"os"
 	"time"
 )
 
@@ -15,15 +17,46 @@ var notificationTypes = map[int]string{
 	3: "Template Service",
 }
 
+type Config struct {
+	QueueSettings struct {
+		StorageAccountName string `json:"StorageAccountName"`
+		StorageAccountKey  string `json:"StorageAccountKey"`
+		StorageQueueName   string `json:"StorageQueueName"`
+	} `json:"QueueSettings"`
+}
+
+func (cfg Config) String() string {
+	return fmt.Sprintf("Account Name: %s Account Key: %s QueueName: %s", cfg.QueueSettings.StorageAccountName, cfg.QueueSettings.StorageAccountKey, cfg.QueueSettings.StorageQueueName)
+}
+
+func loadConfiguration(file string) (Config, error) {
+	var config Config
+	configFile, err := os.Open(file)
+	defer configFile.Close()
+	if err != nil {
+		return Config{}, fmt.Errorf(" unable to open config file: %v", err)
+	}
+	jsonParser := json.NewDecoder(configFile)
+	jsonParser.Decode(&config)
+	return config, nil
+}
+
 func main() {
-	msgCount, err := EmailNotificationLibrary.NotificationCount()
+
+	var config Config
+	var err error
+	config, err = loadConfiguration("config.json")
+	if err != nil {
+		log.Fatalf("Error retrieving application settings  %v\n", err)
+	}
+	msgCount, err := EmailNotificationLibrary.NotificationCount(config.QueueSettings.StorageAccountName, config.QueueSettings.StorageAccountKey, config.QueueSettings.StorageQueueName)
 	if err != nil {
 		log.Fatalf("Error retrieving msg count %v\n", err)
 	}
 
 	fmt.Printf("%d messages waiting \n", msgCount)
 	if msgCount > 0 {
-		msgs, err := EmailNotificationLibrary.GetNotifications()
+		msgs, err := EmailNotificationLibrary.GetNotifications(config.QueueSettings.StorageAccountName, config.QueueSettings.StorageAccountKey, config.QueueSettings.StorageQueueName)
 
 		if err != nil {
 			log.Fatal(err)
